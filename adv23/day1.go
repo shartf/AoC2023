@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func main() {
+func day1() {
 	downloader.CheckFile("1", "2023")
 	parseDay1()
 }
