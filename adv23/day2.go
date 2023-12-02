@@ -34,7 +34,16 @@ func part21(input []string) {
 		// 	gameSum += resGame.GameID
 		gameSum += resGame
 	}
-	fmt.Println(gameSum)
+	fmt.Printf("Answer to part 1 is: %d \n", gameSum)
+
+	// part22
+	var towerOfPower int
+	for _, line := range input {
+		resPart2 := parserPart2(line)
+		towerOfPower += resPart2
+	}
+
+	fmt.Printf("Answer to part 2 is: %d \n", towerOfPower)
 }
 
 func parserPart1(line string) int {
@@ -48,7 +57,7 @@ func parserPart1(line string) int {
 	matchesGame := reGame.FindAllStringSubmatch(gameNoAndGames[0], -1)
 	gameCount := counter(matchesGame)
 
-	// if any of the values is bigger than allowed, value is not switched
+	// if any of the values is bigger than allowed, value is switched to false
 	validGame := true
 	// check single games
 	singleGames := strings.Split(gameNoAndGames[1], ";")
@@ -76,6 +85,45 @@ func parserPart1(line string) int {
 	}
 }
 
+func parserPart2(line string) int {
+	reblue := regexp.MustCompile(`(\d+) blue`)
+	regreen := regexp.MustCompile(`(\d+) green`)
+	rered := regexp.MustCompile(`(\d+) red`)
+
+	// split in game number and games
+	gameNoAndGames := strings.Split(line, ":")
+
+	blueMax := 0
+	greenMax := 0
+	redMax := 0
+
+	singleGames := strings.Split(gameNoAndGames[1], ";")
+	for _, game := range singleGames {
+
+		matchesBlue := reblue.FindAllStringSubmatch(game, -1)
+		matchesGreen := regreen.FindAllStringSubmatch(game, -1)
+		matchesRed := rered.FindAllStringSubmatch(game, -1)
+
+		blueCount := counter(matchesBlue)
+		greenCount := counter(matchesGreen)
+		redCount := counter(matchesRed)
+
+		if blueCount > blueMax {
+			blueMax = blueCount
+		}
+		if greenCount > greenMax {
+			greenMax = greenCount
+		}
+		if redCount > redMax {
+			redMax = redCount
+		}
+	}
+
+	return (blueMax * greenMax * redMax)
+}
+
+// Those, who can read, are in a clear advantage.
+// Sadly, it is not me, so I leave it as a sad statement of me not being able to understand the requirements.
 func parser(line string) Game {
 	// split into game number and draws
 	// gameResults := strings.Split(line, ":")
