@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -26,14 +27,53 @@ type Game struct {
 func part21(input []string) {
 	var gameSum int
 	for _, line := range input {
-		resGame := parser(line)
+		resGame := parserPart1(line)
 		// fmt.Printf("Game No. %d has %d red, %d green, %d blue cubes\n", resGame.GameID, resGame.Red, resGame.Green, resGame.Blue)
-		if resGame.Blue <= 14 && resGame.Red <= 12 && resGame.Green <= 13 {
-			fmt.Printf("Game No. %d has %d red, %d green, %d blue cubes\n", resGame.GameID, resGame.Red, resGame.Green, resGame.Blue)
-			gameSum += resGame.GameID
+		// if resGame.Blue <= 14 && resGame.Red <= 12 && resGame.Green <= 13 {
+		// 	fmt.Printf("Game No. %d has %d red, %d green, %d blue cubes\n", resGame.GameID, resGame.Red, resGame.Green, resGame.Blue)
+		// 	gameSum += resGame.GameID
+		gameSum += resGame
+	}
+	fmt.Println(gameSum)
+}
+
+func parserPart1(line string) int {
+	reGame := regexp.MustCompile(`Game (\d+)`)
+	reblue := regexp.MustCompile(`(\d+) blue`)
+	regreen := regexp.MustCompile(`(\d+) green`)
+	rered := regexp.MustCompile(`(\d+) red`)
+
+	// split in game number and games
+	gameNoAndGames := strings.Split(line, ":")
+	matchesGame := reGame.FindAllStringSubmatch(gameNoAndGames[0], -1)
+	gameCount := counter(matchesGame)
+
+	// if any of the values is bigger than allowed, value is not switched
+	validGame := true
+	// check single games
+	singleGames := strings.Split(gameNoAndGames[1], ";")
+	for _, game := range singleGames {
+
+		matchesBlue := reblue.FindAllStringSubmatch(game, -1)
+		matchesGreen := regreen.FindAllStringSubmatch(game, -1)
+		matchesRed := rered.FindAllStringSubmatch(game, -1)
+
+		blueCount := counter(matchesBlue)
+		greenCount := counter(matchesGreen)
+		redCount := counter(matchesRed)
+
+		// check for conditions
+		// the variable is set to true initially, but even if one game is not valid, the whole set is invalid, so we look for one game only
+		if redCount > 12 || greenCount > 13 || blueCount > 14 {
+			validGame = false
 		}
 	}
-	fmt.Print(gameSum)
+
+	if !validGame {
+		return 0
+	} else {
+		return gameCount
+	}
 }
 
 func parser(line string) Game {
