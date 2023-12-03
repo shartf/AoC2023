@@ -1,0 +1,28 @@
+package main
+
+import "downloader"
+import "os"
+import "log"
+import "bufio"
+
+
+func main() {
+	downloader.CheckFile("3", "2023")
+	
+}
+
+func reader3() []string {
+	file, err := os.Open("../input/3_2023_test.txt")
+	if err != nil {
+		log.Fatalf("failed to open file %s", err)
+	}
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	var textLine []string
+	for scanner.Scan() {
+		textLine = append(textLine, scanner.Text())
+	}
+	file.Close()
+	return textLine
+}

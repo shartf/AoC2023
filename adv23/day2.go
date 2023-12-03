@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func main() {
+func day2() {
 	downloader.CheckFile("2", "2023")
 	input := reader()
 	part21(input)
