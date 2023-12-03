@@ -14,6 +14,30 @@ func main() {
 	downloader.CheckFile("3", "2023")
 	input, lineCount := readerD3()
 	day3Part1(input, lineCount)
+	day3Part2Hor()
+}
+
+func day3Part2Hor() {
+	var resHor int
+	input := "...234*2345..3.*452...22*.232..5.*.4..."
+	re, _ := regexp.Compile(`(\d+)\*(\d+)|(\d+)\.\*\.(\d+)|(\d+)\.\*(\d+)|(\d+)\*\.(\d+)`)
+	matchHor := re.FindAllStringSubmatch(input, -1)
+	if len(matchHor) != 0 {
+	outerLoop:
+		for _, match := range matchHor {
+			// since it matches the numbers in their real positions to an array, I will have to loop through them :/
+			for i := 1; i < len(match)-1; i++ {
+				if match[i] != "" {
+					car, _ := strconv.Atoi(match[i])
+					cdr, _ := strconv.Atoi(match[i+1])
+					// error-handling advent-way!
+					resHor += car * cdr
+					break outerLoop
+				}
+			}
+		}
+	}
+	println(resHor)
 }
 
 func day3Part1(input []string, lineCount int) {
