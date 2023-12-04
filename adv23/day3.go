@@ -12,20 +12,30 @@ import (
 
 func main() {
 	downloader.CheckFile("3", "2023")
-	input, lineCount := readerD3()
-	day3Part1(input, lineCount)
-	day3Part2Hor()
+	input, _ := readerD3()
+	////day3Part1(input, lineCount)
+	part2Result := handleSecondPart(input)
+	fmt.Print(part2Result)
 }
 
-func day3Part2Hor() {
+func handleSecondPart(input []string) int {
+	var res int
+	for _, line := range input {
+		// sum horizontal items
+		res += day3Part2Hor(line)
+	}
+	return res
+}
+
+func day3Part2Hor(line string) int {
 	var resHor int
-	input := "...234*2345..3.*452...22*.232..5.*.4..."
+	// input := "...234*2345..3.*452...22*.232..5.*.4..."
 	re, _ := regexp.Compile(`(\d+)\*(\d+)|(\d+)\.\*\.(\d+)|(\d+)\.\*(\d+)|(\d+)\*\.(\d+)`)
-	matchHor := re.FindAllStringSubmatch(input, -1)
+	matchHor := re.FindAllStringSubmatch(line, -1)
 	if len(matchHor) != 0 {
-	outerLoop:
 		for _, match := range matchHor {
 			// since it matches the numbers in their real positions to an array, I will have to loop through them :/
+		outerLoop:
 			for i := 1; i < len(match)-1; i++ {
 				if match[i] != "" {
 					car, _ := strconv.Atoi(match[i])
@@ -37,7 +47,7 @@ func day3Part2Hor() {
 			}
 		}
 	}
-	println(resHor)
+	return resHor
 }
 
 func day3Part1(input []string, lineCount int) {
